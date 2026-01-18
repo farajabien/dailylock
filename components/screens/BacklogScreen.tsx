@@ -11,8 +11,10 @@ export const BacklogScreen: React.FC = () => {
   const [inputValue, setInputValue] = React.useState('');
   const [editingTaskId, setEditingTaskId] = React.useState<string | null>(null);
   
-  // Filter only backlog tasks
-  const backlogTasks = tasks.filter(t => t.isBacklog);
+  // Filter only backlog tasks and sort by recency (newest first)
+  const backlogTasks = tasks
+    .filter(t => t.isBacklog)
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && inputValue.trim()) {

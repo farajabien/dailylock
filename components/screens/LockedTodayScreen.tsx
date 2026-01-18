@@ -5,9 +5,11 @@ import { useLockedStore } from '@/store/useLockedStore';
 import { TaskItem } from '@/components/ui-custom/TaskItem';
 import { BottomNav } from '@/components/ui-custom/BottomNav';
 import { QuickCaptureSheet } from '@/components/ui-custom/QuickCaptureSheet';
+import { EditTaskDrawer } from '@/components/ui-custom/EditTaskDrawer';
 
 export const LockedTodayScreen: React.FC = () => {
   const { tasks, toggleTask, setHasNote } = useLockedStore();
+  const [editingTaskId, setEditingTaskId] = React.useState<string | null>(null);
   
   const todayTasks = tasks.filter(t => !t.isBacklog && !t.isTomorrow);
   
@@ -68,8 +70,7 @@ export const LockedTodayScreen: React.FC = () => {
                  toast.success('Task moved to Backlog');
               }}
               onEdit={() => {
-                 // Future implementation: Open note editor
-                 setHasNote(task.id, !task.hasNote); // Toggle note status for demo
+                 setEditingTaskId(task.id); 
               }}
             />
           ))}
@@ -81,6 +82,12 @@ export const LockedTodayScreen: React.FC = () => {
 
       <QuickCaptureSheet />
       <BottomNav />
+      {/* Edit Drawer Integration */}
+      <EditTaskDrawer 
+        taskId={editingTaskId} 
+        isOpen={!!editingTaskId} 
+        onClose={() => setEditingTaskId(null)} 
+      />
       
       {/* Overlay Gradients for Depth (Subtle) */}
       <div className="pointer-events-none fixed top-0 left-0 w-full h-32 bg-gradient-to-b from-locked-background-light/10 dark:from-locked-background-dark/20 to-transparent z-0"></div>

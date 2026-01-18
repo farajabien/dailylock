@@ -25,9 +25,9 @@ export const QuickCaptureSheet: React.FC = () => {
     e?.preventDefault();
     if (!text.trim()) return;
     
-    
+    // Default to backlog (isBacklog = true by default in store now)
     addTask(text);
-    toast.success('Task added to Today.');
+    toast.success('Task added to Backlog');
     setText('');
     setIsOpen(false);
   };

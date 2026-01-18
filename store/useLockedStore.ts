@@ -11,12 +11,14 @@ export interface Task {
   isBacklog?: boolean;
   isTomorrow?: boolean;
   category?: Category;
+  createdAt: number;
+  completedAt?: number;
 }
 
 interface LockedState {
   tasks: Task[];
   isLocked: boolean;
-  activeTab: 'today' | 'backlog' | 'settings' | 'evening-ritual';
+  activeTab: 'today' | 'backlog' | 'settings' | 'evening-ritual' | 'completed';
   
   // Actions
   addTask: (text: string, isBacklog?: boolean) => void;
@@ -32,7 +34,7 @@ interface LockedState {
   lockTomorrow: () => void; // Confirms tomorrow's list as today's new active list
   
   setLocked: (isLocked: boolean) => void;
-  setActiveTab: (tab: 'today' | 'backlog' | 'settings' | 'evening-ritual') => void;
+  setActiveTab: (tab: 'today' | 'backlog' | 'settings' | 'evening-ritual' | 'completed') => void;
   clearAllTasks: () => void;
 }
 
@@ -41,28 +43,28 @@ export const useLockedStore = create<LockedState>()(
     (set) => ({
       tasks: [
         // Today's Tasks
-        { id: '1', text: 'Draft Q4 Project Proposal', completed: false, hasNote: false },
-        { id: '2', text: '30 Minute Run', completed: true, hasNote: true },
-        { id: '3', text: 'Review Pull Requests', completed: false, hasNote: false },
-        { id: '4', text: 'Prepare Slides for All-Hands', completed: false, hasNote: false },
-        { id: '5', text: 'Inbox Zero', completed: false, hasNote: false },
+        { id: '1', text: 'Draft Q4 Project Proposal', completed: false, hasNote: false, createdAt: Date.now() - 100000 },
+        { id: '2', text: '30 Minute Run', completed: true, hasNote: true, createdAt: Date.now() - 90000, completedAt: Date.now() - 5000 },
+        { id: '3', text: 'Review Pull Requests', completed: false, hasNote: false, createdAt: Date.now() - 80000 },
+        { id: '4', text: 'Prepare Slides for All-Hands', completed: false, hasNote: false, createdAt: Date.now() - 70000 },
+        { id: '5', text: 'Inbox Zero', completed: false, hasNote: false, createdAt: Date.now() - 60000 },
         
         // Backlog Tasks
-        { id: '6', text: 'Draft Q3 Report for Nexus', completed: false, isBacklog: true, category: 'Client' },
-        { id: '7', text: 'Call Insurance Company', completed: false, isBacklog: true, category: 'Personal' },
-        { id: '8', text: 'Update server configs', completed: false, isBacklog: true, category: 'Ops' },
-        { id: '9', text: 'Buy groceries for weekend', completed: false, isBacklog: true, category: 'Personal' },
-        { id: '10', text: 'Renew domain name', completed: false, isBacklog: true, category: 'Urgent' },
-        { id: '11', text: 'Feedback on design mockups', completed: false, isBacklog: true, category: 'Client' },
-        { id: '12', text: 'Quarterly tax prep', completed: false, isBacklog: true, category: 'Ops' },
+        { id: '6', text: 'Draft Q3 Report for Nexus', completed: false, isBacklog: true, category: 'Client', createdAt: Date.now() - 50000 },
+        { id: '7', text: 'Call Insurance Company', completed: false, isBacklog: true, category: 'Personal', createdAt: Date.now() - 40000 },
+        { id: '8', text: 'Update server configs', completed: false, isBacklog: true, category: 'Ops', createdAt: Date.now() - 30000 },
+        { id: '9', text: 'Buy groceries for weekend', completed: false, isBacklog: true, category: 'Personal', createdAt: Date.now() - 20000 },
+        { id: '10', text: 'Renew domain name', completed: false, isBacklog: true, category: 'Urgent', createdAt: Date.now() - 10000 },
+        { id: '11', text: 'Feedback on design mockups', completed: false, isBacklog: true, category: 'Client', createdAt: Date.now() - 5000 },
+        { id: '12', text: 'Quarterly tax prep', completed: false, isBacklog: true, category: 'Ops', createdAt: Date.now() },
       ],
       isLocked: true,
       activeTab: 'today',
 
-      addTask: (text, isBacklog = false) => set((state) => ({
+      addTask: (text, isBacklog = true) => set((state) => ({
         tasks: [
+          { id: crypto.randomUUID(), text, completed: false, isBacklog, createdAt: Date.now() },
           ...state.tasks,
-          { id: crypto.randomUUID(), text, completed: false, isBacklog }
         ]
       })),
       
@@ -73,9 +75,17 @@ export const useLockedStore = create<LockedState>()(
       })),
 
       toggleTask: (id) => set((state) => ({
-        tasks: state.tasks.map((t) => 
-          t.id === id ? { ...t, completed: !t.completed } : t
-        )
+        tasks: state.tasks.map((t) => {
+          if (t.id === id) {
+            const newCompleted = !t.completed;
+            return { 
+              ...t, 
+              completed: newCompleted,
+              completedAt: newCompleted ? Date.now() : undefined
+            };
+          }
+          return t;
+        })
       })),
 
       deleteTask: (id) => set((state) => ({
