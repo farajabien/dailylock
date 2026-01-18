@@ -97,18 +97,39 @@ export const SettingsScreen: React.FC = () => {
                     Export
                   </Button>
                </div>
+
+               <div className="p-4 flex items-center justify-between border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-full bg-orange-500/10 text-orange-500">
+                      <Trash2 className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">Clear All Tasks</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Delete all items, keep settings</p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm" onClick={() => {
+                    if (confirm('Delete ALL tasks? This cannot be undone.')) {
+                        const { clearAllTasks } = useLockedStore.getState();
+                        clearAllTasks();
+                        toast.success('All tasks deleted.');
+                    }
+                  }} className="text-orange-500 hover:text-orange-600 hover:bg-orange-500/10 h-8">
+                    Clear
+                  </Button>
+               </div>
                
-               <div className="p-4 flex items-center justify-between border-b border-gray-100 dark:border-white/5 last:border-0 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+               <div className="p-4 flex items-center justify-between hover:bg-rose-50 dark:hover:bg-rose-900/10 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-full bg-rose-500/10 text-rose-500">
                       <Trash2 className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900 dark:text-white">Reset Application</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Clear all tasks locally</p>
+                      <p className="font-medium text-gray-900 dark:text-white">Factory Reset</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Wipe everything and reload</p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" onClick={handleClearData} className="text-rose-500 hover:text-rose-600 hover:bg-rose-500/10 h-8">
+                  <Button variant="ghost" size="sm" onClick={handleClearData} className="text-rose-600 hover:text-rose-700 hover:bg-rose-500/10 h-8 font-bold">
                     Reset
                   </Button>
                </div>

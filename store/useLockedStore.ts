@@ -33,6 +33,7 @@ interface LockedState {
   
   setLocked: (isLocked: boolean) => void;
   setActiveTab: (tab: 'today' | 'backlog' | 'settings' | 'evening-ritual') => void;
+  clearAllTasks: () => void;
 }
 
 export const useLockedStore = create<LockedState>()(
@@ -144,6 +145,8 @@ export const useLockedStore = create<LockedState>()(
       setLocked: (isLocked) => set({ isLocked }),
       
       setActiveTab: (activeTab) => set({ activeTab }),
+
+      clearAllTasks: () => set({ tasks: [] }),
     }),
     {
       name: 'daily-lock-storage',

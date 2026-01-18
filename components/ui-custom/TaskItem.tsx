@@ -44,7 +44,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onEdit, onMo
         </div>
         
         <label className={cn(
-          "text-base font-medium truncate cursor-pointer transition-colors",
+          "text-base font-medium truncate cursor-pointer transition-all duration-300 group-hover:whitespace-normal group-hover:overflow-visible group-hover:break-words",
           task.completed
             ? "text-gray-500 dark:text-gray-500 line-through"
             : "text-gray-900 dark:text-gray-200 group-hover:text-locked-primary"
