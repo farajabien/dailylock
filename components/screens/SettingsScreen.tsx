@@ -5,11 +5,13 @@ import { useLockedStore } from '@/store/useLockedStore';
 import { BottomNav } from '@/components/ui-custom/BottomNav';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PushNotificationManager } from "@/components/pwa/PushNotificationManager";
 
 export const SettingsScreen: React.FC = () => {
   const { tasks } = useLockedStore();
   
-  // Dark Mode Logic
+  // Backwards compatibility for old props
+  // ... existing code ...
   const toggleDarkMode = () => {
     document.documentElement.classList.toggle('dark');
   };
@@ -66,6 +68,13 @@ export const SettingsScreen: React.FC = () => {
 
             {/* TAB: PREFERENCES */}
             <TabsContent value="preferences" className="space-y-6 focus-visible:outline-none">
+              <section className="space-y-3">
+                <h2 className="text-xs font-bold tracking-wider text-gray-400 uppercase ml-1">Notifications</h2>
+                <div className="bg-white dark:bg-[#2A2D33] rounded-xl border border-gray-100 dark:border-white/5 overflow-hidden p-4">
+                  <PushNotificationManager />
+                </div>
+              </section>
+
               <section className="space-y-3">
                 <h2 className="text-xs font-bold tracking-wider text-gray-400 uppercase ml-1">Appearance</h2>
                 <div className="bg-white dark:bg-[#2A2D33] rounded-xl border border-gray-100 dark:border-white/5 overflow-hidden">

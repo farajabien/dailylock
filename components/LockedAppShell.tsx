@@ -8,6 +8,8 @@ import { EveningRitualScreen } from "@/components/screens/EveningRitualScreen";
 import { CompletedScreen } from "@/components/screens/CompletedScreen";
 import { SettingsScreen } from "@/components/screens/SettingsScreen";
 
+import { InstallPrompt } from "@/components/pwa/InstallPrompt";
+
 export const LockedAppShell: React.FC = () => {
   const activeTab = useLockedStore((state) => state.activeTab);
   const [isClient, setIsClient] = useState(false);
@@ -21,6 +23,16 @@ export const LockedAppShell: React.FC = () => {
     return null; // or a loading spinner / skeleton matching the locked screen
   }
 
+  // Shell Layout
+  return (
+    <>
+      <MainContent activeTab={activeTab} />
+      <InstallPrompt />
+    </>
+  );
+};
+
+const MainContent = ({ activeTab }: { activeTab: string }) => {
   if (activeTab === 'settings') {
     return <SettingsScreen />;
   }
