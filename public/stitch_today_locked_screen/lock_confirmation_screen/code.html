@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lock Confirmation Screen</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+            extend: {
+                colors: {
+                "primary": "#c7a56b",
+                "background-light": "#1e1b15", // Override for this specific design to keep it dark even in light mode if needed, but following prompt logic
+                "background-dark": "#0f1624",
+                "midnight": "#0B101B",
+                "gold-glow": "rgba(199, 165, 107, 0.15)",
+                },
+                fontFamily: {
+                "display": ["Manrope", "sans-serif"]
+                },
+                borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                backgroundImage: {
+                    'subtle-radial': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
+                }
+            },
+            },
+        }
+    </script>
+<style>
+        /* Custom subtle breathing animation for the glow */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .animate-breathe {
+            animation: breathe 6s ease-in-out infinite;
+        }
+        
+        /* Glassmorphism utility for the lock container */
+        .glass-panel {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.0) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-midnight font-display text-white overflow-hidden h-screen w-full selection:bg-primary selection:text-midnight">
+<!-- Main Container -->
+<div class="relative flex h-full w-full flex-col items-center justify-between px-6 py-8 md:max-w-md mx-auto">
+<!-- Background Ambient Glow -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[60%] bg-subtle-radial from-[#1e2a45] to-transparent opacity-40 pointer-events-none z-0 blur-3xl"></div>
+<!-- Spacer for top balance -->
+<div class="flex-none h-16"></div>
+<!-- Central Content Area -->
+<div class="relative z-10 flex flex-col items-center justify-center flex-grow w-full max-w-xs text-center space-y-8">
+<!-- Lock Visualization -->
+<div class="relative group">
+<!-- Ethereal Glow Behind Lock -->
+<div class="absolute inset-0 bg-primary rounded-full blur-[60px] opacity-20 animate-breathe pointer-events-none"></div>
+<!-- The Lock Icon / Illustration Container -->
+<div class="relative flex items-center justify-center w-40 h-40 md:w-48 md:h-48 rounded-full glass-panel shadow-2xl shadow-black/50">
+<!-- Material Symbol as the Lock Illustration base, styled to look premium -->
+<span class="material-symbols-outlined text-[80px] md:text-[96px] text-primary drop-shadow-[0_0_15px_rgba(199,165,107,0.4)]" style="font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 48;">
+                        lock
+                    </span>
+<!-- Decorative sparkle -->
+<span class="material-symbols-outlined absolute top-8 right-10 text-white/60 text-xl animate-pulse" style="font-variation-settings: 'wght' 700;">
+                        auto_awesome
+                    </span>
+</div>
+</div>
+<!-- Text Content -->
+<div class="flex flex-col gap-4 animate-fade-in-up">
+<h1 class="text-white tracking-tight text-[32px] font-bold leading-tight drop-shadow-lg">
+                    Tomorrow is Locked
+                </h1>
+<p class="text-slate-400 text-base font-medium leading-relaxed max-w-[280px] mx-auto">
+                    Rest well. Any new requests will be safely sent to your Backlog for later review.
+                </p>
+</div>
+</div>
+<!-- Bottom Action Area -->
+<div class="relative z-10 w-full flex flex-col items-center gap-6 pb-6">
+<!-- Contextual hint (optional decorative element) -->
+<div class="flex items-center gap-2 text-primary/40 text-xs uppercase tracking-widest font-semibold">
+<span class="material-symbols-outlined text-sm">bedtime</span>
+<span>Ritual Complete</span>
+</div>
+<!-- Primary Button -->
+<button class="group relative flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-8 bg-primary text-midnight text-lg font-bold leading-normal tracking-wide transition-all duration-300 hover:bg-[#d4b57e] active:scale-95 shadow-[0_0_20px_rgba(199,165,107,0.2)] hover:shadow-[0_0_30px_rgba(199,165,107,0.4)]">
+<span class="relative z-10">Sleep Well</span>
+<!-- Button internal glow/shine effect -->
+<div class="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+</button>
+</div>
+</div>
+</body></html>
