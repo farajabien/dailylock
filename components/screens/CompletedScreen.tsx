@@ -1,7 +1,7 @@
 import React from 'react';
 import { CheckCircle2, History } from 'lucide-react';
 import { useLockedStore } from '@/store/useLockedStore';
-import { BottomNav } from '@/components/ui-custom/BottomNav';
+import { BottomNavigation } from '@/components/ui-custom/BottomNavigation';
 import { cn } from '@/lib/utils';
 
 export const CompletedScreen: React.FC = () => {
@@ -75,7 +75,7 @@ export const CompletedScreen: React.FC = () => {
         <div className="absolute bottom-20 left-0 right-0 h-24 bg-gradient-to-t from-locked-background-light dark:from-locked-background-dark to-transparent pointer-events-none"></div>
 
       </div>
-      <BottomNav />
+      <BottomNavigation />
     </div>
   );
 };

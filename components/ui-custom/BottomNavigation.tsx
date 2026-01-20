@@ -3,7 +3,7 @@ import { Calendar, Layers, Settings, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLockedStore } from '@/store/useLockedStore';
 
-export const BottomNav: React.FC = () => {
+export const BottomNavigation: React.FC = () => {
   const { activeTab, setActiveTab } = useLockedStore();
 
   return (

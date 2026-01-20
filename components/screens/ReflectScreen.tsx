@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { BookOpen, Calendar, ChevronRight, Lock, Plus, X } from 'lucide-react';
 import { useLockedStore, MonthlyEntry } from '@/store/useLockedStore';
-import { BottomNav } from '@/components/ui-custom/BottomNav';
+import { BottomNavigation } from '@/components/ui-custom/BottomNavigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -17,6 +17,15 @@ import {
   DrawerDescription,
   DrawerFooter,
 } from "@/components/ui/drawer";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { useEffect } from 'react';
 
 // Helper to get current month string
 const getCurrentMonth = () => {
@@ -37,6 +46,80 @@ const checkIsLastWeek = () => {
   const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
   const daysRemaining = lastDay.getDate() - now.getDate();
   return daysRemaining <= 7;
+};
+
+const StarterStatsDialog = () => {
+  const { baseIncome, setBaseFinancials } = useLockedStore();
+  const [open, setOpen] = useState(false);
+  const [income, setIncome] = useState('');
+  const [debt, setDebt] = useState('');
+
+  // Only open if values are strictly undefined (never set)
+  // If they are 0, they are considered set.
+  useEffect(() => {
+    if (baseIncome === undefined) {
+      // Delay slightly to avoid hydration mismatch or jarring effect
+      const timer = setTimeout(() => setOpen(true), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [baseIncome]);
+
+  const handleSave = () => {
+     // Save values, defaulting to 0 if empty
+     setBaseFinancials(
+       income ? parseFloat(income) : 0,
+       debt ? parseFloat(debt) : 0
+     );
+     setOpen(false);
+     toast.success("Starter stats saved");
+  };
+
+  const handleDismiss = () => {
+    // If dismissed, set to 0 so we don't ask again
+    setBaseFinancials(0, 0);
+    setOpen(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(val) => !val && handleDismiss()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Quick Setup</DialogTitle>
+          <DialogDescription>
+            Set your starter stats to auto-fill monthly entries. You can enter 0 or skip this.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center space-x-2 py-4">
+           <div className="grid flex-1 gap-2">
+             <label className="text-xs font-medium text-gray-500">Base Income</label>
+             <Input 
+               type="number" 
+               placeholder="0" 
+               value={income}
+               onChange={(e) => setIncome(e.target.value)}
+             />
+           </div>
+           <div className="grid flex-1 gap-2">
+             <label className="text-xs font-medium text-gray-500">Base Debt</label>
+             <Input 
+               type="number" 
+               placeholder="0" 
+               value={debt}
+               onChange={(e) => setDebt(e.target.value)}
+             />
+           </div>
+        </div>
+        <DialogFooter className="sm:justify-between gap-2">
+          <Button type="button" variant="ghost" onClick={handleDismiss} className="text-gray-500">
+            Skip / Don't Ask Again
+          </Button>
+          <Button type="button" onClick={handleSave}>
+            Save Stats
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 };
 
 export const ReflectScreen: React.FC = () => {
@@ -101,6 +184,7 @@ export const ReflectScreen: React.FC = () => {
 
   return (
     <div className="bg-locked-background-light dark:bg-locked-background-dark font-display text-gray-900 dark:text-white antialiased overflow-hidden h-screen flex flex-col items-center">
+      <StarterStatsDialog />
       <div className="relative flex flex-col w-full max-w-md h-full bg-locked-background-light dark:bg-locked-background-dark shadow-2xl overflow-hidden border-x border-transparent dark:border-[#2a2d33]">
         
         {/* Header */}
@@ -424,7 +508,7 @@ export const ReflectScreen: React.FC = () => {
         {/* Content Fade */}
         <div className="absolute bottom-20 left-0 right-0 h-24 bg-gradient-to-t from-locked-background-light dark:from-locked-background-dark to-transparent pointer-events-none"></div>
       </div>
-      <BottomNav />
+      <BottomNavigation />
     </div>
   );
 };

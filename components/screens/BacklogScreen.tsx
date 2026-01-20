@@ -3,7 +3,7 @@ import { SortAsc, Plus, Tent, ArrowRight } from 'lucide-react'; // Using Tent as
 import { toast } from 'sonner';
 import { useLockedStore, Task } from '@/store/useLockedStore';
 import { BacklogItem } from '@/components/ui-custom/BacklogItem';
-import { BottomNav } from '@/components/ui-custom/BottomNav';
+import { BottomNavigation } from '@/components/ui-custom/BottomNavigation';
 import { EditTaskDrawer } from '@/components/ui-custom/EditTaskDrawer';
 
 export const BacklogScreen: React.FC = () => {
@@ -107,7 +107,7 @@ export const BacklogScreen: React.FC = () => {
 
       </div>
       
-      <BottomNav />
+      <BottomNavigation />
       
       <EditTaskDrawer 
         taskId={editingTaskId} 

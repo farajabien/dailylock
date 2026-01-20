@@ -3,7 +3,7 @@ import { Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLockedStore } from '@/store/useLockedStore';
 import { TaskItem } from '@/components/ui-custom/TaskItem';
-import { BottomNav } from '@/components/ui-custom/BottomNav';
+import { BottomNavigation } from '@/components/ui-custom/BottomNavigation';
 import { QuickCaptureSheet } from '@/components/ui-custom/QuickCaptureSheet';
 import { EditTaskDrawer } from '@/components/ui-custom/EditTaskDrawer';
 
@@ -81,7 +81,7 @@ export const LockedTodayScreen: React.FC = () => {
       </main>
 
       <QuickCaptureSheet />
-      <BottomNav />
+      <BottomNavigation />
       {/* Edit Drawer Integration */}
       <EditTaskDrawer 
         taskId={editingTaskId} 
