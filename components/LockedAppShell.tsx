@@ -7,6 +7,7 @@ import { BacklogScreen } from "@/components/screens/BacklogScreen";
 import { EveningRitualScreen } from "@/components/screens/EveningRitualScreen";
 import { CompletedScreen } from "@/components/screens/CompletedScreen";
 import { SettingsScreen } from "@/components/screens/SettingsScreen";
+import { ReflectScreen } from "@/components/screens/ReflectScreen";
 
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 
@@ -47,6 +48,10 @@ const MainContent = ({ activeTab }: { activeTab: string }) => {
   
   if (activeTab === 'completed') {
     return <CompletedScreen />;
+  }
+
+  if (activeTab === 'reflect') {
+    return <ReflectScreen />;
   }
 
   return <LockedTodayScreen />;

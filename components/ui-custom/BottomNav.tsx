@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Layers, Settings, CheckCircle2 } from 'lucide-react';
+import { Calendar, Layers, Settings, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLockedStore } from '@/store/useLockedStore';
 
@@ -43,26 +43,24 @@ export const BottomNav: React.FC = () => {
           <span className="text-[10px] font-medium tracking-wide">Backlog</span>
         </button>
 
-       
-
-        {/* Completed Tab */}
+        {/* Reflect Tab */}
         <button 
-          onClick={() => setActiveTab('completed')}
+          onClick={() => setActiveTab('reflect')}
           className={cn(
             "flex flex-col items-center justify-center w-full h-full gap-1 transition-colors group",
-            activeTab === 'completed' ? "text-locked-primary" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+            activeTab === 'reflect' ? "text-locked-primary" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
           )}
         >
           <div className={cn(
             "relative p-1 rounded-xl transition-colors",
-            activeTab === 'completed' ? "bg-locked-primary/10 group-hover:bg-locked-primary/20" : ""
+            activeTab === 'reflect' ? "bg-locked-primary/10 group-hover:bg-locked-primary/20" : ""
           )}>
-            <CheckCircle2 className="h-6 w-6" />
+            <BookOpen className="h-6 w-6" />
           </div>
-          <span className="text-[10px] font-medium tracking-wide">Done</span>
+          <span className="text-[10px] font-medium tracking-wide">Reflect</span>
         </button>
 
-         {/* Settings Tab */}
+        {/* Settings Tab */}
         <button 
           onClick={() => setActiveTab('settings')}
           className={cn(

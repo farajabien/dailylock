@@ -15,12 +15,35 @@ export interface Task {
   completedAt?: number;
 }
 
+// Now, Then - Reflect Feature Types
+export interface WeeklyNote {
+  id: string;
+  weekNumber: number;
+  note: string;
+  createdAt: number;
+}
+
+export interface MonthlyEntry {
+  id: string;
+  month: string; // "2026-01" format
+  income?: number;
+  incomeNote?: string;
+  debt?: number;
+  letGoOf: string[];
+  moveToward: string[];
+  oneLiner: string;
+  weeklyNotes: WeeklyNote[];
+  createdAt: number;
+  lockedAt?: number;
+}
+
 interface LockedState {
   tasks: Task[];
+  monthlyEntries: MonthlyEntry[];
   isLocked: boolean;
-  activeTab: 'today' | 'backlog' | 'settings' | 'evening-ritual' | 'completed';
+  activeTab: 'today' | 'backlog' | 'settings' | 'evening-ritual' | 'completed' | 'reflect';
   
-  // Actions
+  // Task Actions
   addTask: (text: string, isBacklog?: boolean) => void;
   updateTask: (id: string, updates: Partial<Task>) => void;
   toggleTask: (id: string) => void;
@@ -30,11 +53,21 @@ interface LockedState {
   // Flow Actions
   moveToTomorrow: (id: string) => void;
   moveToBacklog: (id: string) => void;
-  moveToToday: (id: string) => void; // "Pull to Focus"
-  lockTomorrow: () => void; // Confirms tomorrow's list as today's new active list
+  moveToToday: (id: string) => void;
+  lockTomorrow: () => void;
+  
+  // Reflect Actions
+  createOrUpdateMonthlyEntry: (month: string, data: Partial<MonthlyEntry>) => void;
+  addWeeklyNote: (month: string, note: string) => void;
+  lockMonthlyEntry: (month: string) => void;
+
+  // Settings Actions
+  baseIncome?: number;
+  baseDebt?: number;
+  setBaseFinancials: (income?: number, debt?: number) => void;
   
   setLocked: (isLocked: boolean) => void;
-  setActiveTab: (tab: 'today' | 'backlog' | 'settings' | 'evening-ritual' | 'completed') => void;
+  setActiveTab: (tab: 'today' | 'backlog' | 'settings' | 'evening-ritual' | 'completed' | 'reflect') => void;
   clearAllTasks: () => void;
 }
 
@@ -58,6 +91,7 @@ export const useLockedStore = create<LockedState>()(
         { id: '11', text: 'Feedback on design mockups', completed: false, isBacklog: true, category: 'Client', createdAt: Date.now() - 5000 },
         { id: '12', text: 'Quarterly tax prep', completed: false, isBacklog: true, category: 'Ops', createdAt: Date.now() },
       ],
+      monthlyEntries: [],
       isLocked: true,
       activeTab: 'today',
 
@@ -157,6 +191,72 @@ export const useLockedStore = create<LockedState>()(
       setActiveTab: (activeTab) => set({ activeTab }),
 
       clearAllTasks: () => set({ tasks: [] }),
+
+      // Reflect Actions
+      createOrUpdateMonthlyEntry: (month, data) => set((state) => {
+        const existingIndex = state.monthlyEntries.findIndex(e => e.month === month);
+        if (existingIndex >= 0) {
+          // Update existing
+          const updated = [...state.monthlyEntries];
+          updated[existingIndex] = { ...updated[existingIndex], ...data };
+          return { monthlyEntries: updated };
+        } else {
+          // Create new
+          const newEntry: MonthlyEntry = {
+            id: crypto.randomUUID(),
+            month,
+            letGoOf: [],
+            moveToward: [],
+            oneLiner: '',
+            weeklyNotes: [],
+            createdAt: Date.now(),
+            ...data,
+          };
+          return { monthlyEntries: [newEntry, ...state.monthlyEntries] };
+        }
+      }),
+
+      addWeeklyNote: (month, note) => set((state) => {
+        const now = new Date();
+        const weekNumber = Math.ceil(now.getDate() / 7);
+        const newNote: WeeklyNote = {
+          id: crypto.randomUUID(),
+          weekNumber,
+          note,
+          createdAt: Date.now(),
+        };
+        
+        const entryIndex = state.monthlyEntries.findIndex(e => e.month === month);
+        if (entryIndex >= 0) {
+          const updated = [...state.monthlyEntries];
+          updated[entryIndex] = {
+            ...updated[entryIndex],
+            weeklyNotes: [...updated[entryIndex].weeklyNotes, newNote],
+          };
+          return { monthlyEntries: updated };
+        } else {
+          // Create entry if doesn't exist
+          const newEntry: MonthlyEntry = {
+            id: crypto.randomUUID(),
+            month,
+            letGoOf: [],
+            moveToward: [],
+            oneLiner: '',
+            weeklyNotes: [newNote],
+            createdAt: Date.now(),
+          };
+          return { monthlyEntries: [newEntry, ...state.monthlyEntries] };
+        }
+      }),
+
+      lockMonthlyEntry: (month) => set((state) => {
+        const updated = state.monthlyEntries.map(e =>
+          e.month === month ? { ...e, lockedAt: Date.now() } : e
+        );
+        return { monthlyEntries: updated };
+      }),
+
+      setBaseFinancials: (income, debt) => set({ baseIncome: income, baseDebt: debt }),
     }),
     {
       name: 'daily-lock-storage',

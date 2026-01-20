@@ -4,14 +4,13 @@ import { toast } from 'sonner';
 import { useLockedStore } from '@/store/useLockedStore';
 import { BottomNav } from '@/components/ui-custom/BottomNav';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PushNotificationManager } from "@/components/pwa/PushNotificationManager";
 
 export const SettingsScreen: React.FC = () => {
   const { tasks } = useLockedStore();
   
-  // Backwards compatibility for old props
-  // ... existing code ...
   const toggleDarkMode = () => {
     document.documentElement.classList.toggle('dark');
   };
@@ -98,6 +97,31 @@ export const SettingsScreen: React.FC = () => {
 
             {/* TAB: DATA */}
             <TabsContent value="data" className="space-y-6 focus-visible:outline-none">
+              <section className="space-y-3">
+                <h2 className="text-xs font-bold tracking-wider text-gray-400 uppercase ml-1">Starter Stats</h2>
+                <div className="bg-white dark:bg-[#2A2D33] rounded-xl border border-gray-100 dark:border-white/5 overflow-hidden p-4 space-y-4">
+                   <div>
+                     <label className="text-xs text-gray-500 dark:text-gray-400 mb-1 block">Base Income</label>
+                     <Input 
+                       type="number" 
+                       placeholder="e.g. 5000" 
+                       defaultValue={useLockedStore.getState().baseIncome}
+                       onChange={(e) => useLockedStore.getState().setBaseFinancials(e.target.value ? parseFloat(e.target.value) : undefined, useLockedStore.getState().baseDebt)}
+                     />
+                   </div>
+                   <div>
+                     <label className="text-xs text-gray-500 dark:text-gray-400 mb-1 block">Base Debt</label>
+                     <Input 
+                       type="number" 
+                       placeholder="e.g. 10000"
+                       defaultValue={useLockedStore.getState().baseDebt}
+                       onChange={(e) => useLockedStore.getState().setBaseFinancials(useLockedStore.getState().baseIncome, e.target.value ? parseFloat(e.target.value) : undefined)} 
+                     />
+                   </div>
+                   <p className="text-[10px] text-gray-400">These values will pre-fill new monthly entries.</p>
+                </div>
+              </section>
+              
               <section className="space-y-3">
                 <h2 className="text-xs font-bold tracking-wider text-gray-400 uppercase ml-1">Backup & Restore</h2>
                 <div className="bg-white dark:bg-[#2A2D33] rounded-xl border border-gray-100 dark:border-white/5 overflow-hidden">
