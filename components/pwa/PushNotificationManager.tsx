@@ -63,7 +63,13 @@ export function PushNotificationManager() {
         toast.success('Subscribed to notifications!')
     } catch(e) {
         console.error(e);
-        toast.error('Failed to subscribe.');
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        
+        if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
+            toast.error('Config Error: Missing VAPID Public Key');
+        } else {
+            toast.error(`Subscription failed: ${errorMessage}`);
+        }
     } finally {
         setLoading(false)
     }
